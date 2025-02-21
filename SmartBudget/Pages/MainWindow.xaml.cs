@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,31 +53,48 @@ namespace SmartBudget.Pages
             }
         }
 
-        private ProfileSettingsWindow _settingsWindow;
+        private ProfileSettingsWindow settingsWindow;
 
         private void ProfileButton_Click(object sender, RoutedEventArgs e)
         {
-            // Проверяем, если окно уже открыто
-            if (_settingsWindow != null && _settingsWindow.IsVisible)
+            string username = GetCurrentUsernameFromDatabase();
+            if (settingsWindow != null && settingsWindow.IsVisible)
             {
-                _settingsWindow.Activate(); // Фокусируем уже открытое окно
+                settingsWindow.Activate();
                 return;
             }
+            settingsWindow = new ProfileSettingsWindow(username);
 
-            // Создаем экземпляр нового окна
-            _settingsWindow = new ProfileSettingsWindow();
-
-            // Вычисляем позицию для отображения окна в правом верхнем углу
             var mainWindowTopLeft = this.PointToScreen(new Point(0, 0));
-            double xPosition = mainWindowTopLeft.X + this.Width - _settingsWindow.Width - 20; // 20 для отступа
-            double yPosition = mainWindowTopLeft.Y + 40; // Отступ для кнопки
+            double xPosition = mainWindowTopLeft.X + this.Width - settingsWindow.Width - 20;
+            double yPosition = mainWindowTopLeft.Y + 40;
 
-            // Устанавливаем позицию окна
-            _settingsWindow.Left = xPosition;
-            _settingsWindow.Top = yPosition;
+            settingsWindow.Left = xPosition;
+            settingsWindow.Top = yPosition;
 
-            // Показываем новое окно
-            _settingsWindow.Show();
+            settingsWindow.Show();
+        }
+        private string GetCurrentUsernameFromDatabase()
+        {
+            string username = "Unknown";
+            string dbPath = "SmartBuget.db";
+
+            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
+            {
+                connection.Open();
+                string query = "SELECT Username FROM Users LIMIT 1";
+
+                using (var command = new SqliteCommand(query, connection))
+                {
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        username = result.ToString();
+                    }
+                }
+            }
+
+            return username;
         }
     }
 
