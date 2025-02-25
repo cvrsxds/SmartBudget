@@ -11,7 +11,7 @@ namespace SmartBudget.Pages
     /// </summary>
     public partial class LoginWindow : Window
     {
-        public static string DbPath { get; } = "SmartBuget.db";
+        public static string DbPath { get; } = "SmartBudget.db";
         public static string CurrentUser { get; private set; }
         public LoginWindow()
         {

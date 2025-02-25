@@ -56,7 +56,7 @@ namespace SmartBudget.Pages
 
         private bool RegisterUser(string username, string password)
         {
-            string dbPath = "SmartBuget.db";
+            string dbPath = "SmartBudget.db";
 
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             {

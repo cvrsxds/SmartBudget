@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 namespace SmartBudget.Tables
 {
@@ -11,7 +6,7 @@ namespace SmartBudget.Tables
     {
         public static void InitializeDatabase()
         {
-            string dbPath = "SmartBuget.db";
+            string dbPath = "SmartBudget.db";
 
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             {
@@ -32,7 +27,7 @@ namespace SmartBudget.Tables
                         Category TEXT NOT NULL,
                         PurchaseDate DATETIME NOT NULL,
                         FOREIGN KEY (UserId) REFERENCES Users(Id)
-                    )";
+                    );";
 
                 using (var command = new SqliteCommand(createUserTable, connection))
                 {
