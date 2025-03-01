@@ -18,6 +18,8 @@ namespace SmartBudget.Pages
             LoadExpensesFromDatabase();
         }
 
+        
+
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             if (decimal.TryParse(AmountTextBox.Text, out decimal amount) && CategoryComboBox.SelectedItem != null)
@@ -79,14 +81,14 @@ namespace SmartBudget.Pages
                 }
             }
 
-            ExpensesListView.ItemsSource = null;
             ExpensesListView.ItemsSource = _expenses;
             TotalExpensesTextBlock.Text = $"Общая сумма: {_expenses.Sum(e => e.Amount)}";
         }
+
         private int GetCurrentUserId()
         {
-            int userId = -1; // Значение по умолчанию, если пользователь не найден
-            string username = LoginWindow.CurrentUser; // Получаем имя текущего пользователя
+            int userId = -1;
+            string username = LoginWindow.CurrentUser;
 
             if (string.IsNullOrEmpty(username))
             {
@@ -118,12 +120,13 @@ namespace SmartBudget.Pages
         private void ProfileButton_Click(object sender, RoutedEventArgs e)
         {
             string username = GetCurrentUsernameFromDatabase(GetCurrentUserId());
+            int userId = GetCurrentUserId();
             if (settingsWindow != null && settingsWindow.IsVisible)
             {
                 settingsWindow.Activate();
                 return;
             }
-            settingsWindow = new ProfileSettingsWindow(username);
+            settingsWindow = new ProfileSettingsWindow(username, userId);
 
             var mainWindowTopLeft = this.PointToScreen(new Point(0, 0));
             double xPosition = mainWindowTopLeft.X + this.Width - settingsWindow.Width - 20;
@@ -157,6 +160,41 @@ namespace SmartBudget.Pages
             return username;
         }
 
+        private void FilterExpenses(object sender, SelectionChangedEventArgs e)
+        {
+            if (FilterCategoryComboBox == null || SortComboBox == null || ExpensesListView == null)
+                return;
+            string selectedCategory = (FilterCategoryComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            string sortOption = (SortComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            var filteredExpenses = _expenses.AsEnumerable();
+
+            // Фильтрация по категории
+            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "Все")
+            {
+                filteredExpenses = filteredExpenses.Where(exp => exp.Category == selectedCategory);
+            }
+
+            // Сортировка
+            if (!string.IsNullOrEmpty(sortOption) && sortOption != "Без фильтра")
+            {
+                filteredExpenses = sortOption switch
+                {
+                    "По дате (убыв.)" => filteredExpenses.OrderByDescending(exp => exp.Date),
+                    "По дате (возр.)" => filteredExpenses.OrderBy(exp => exp.Date),
+                    "По сумме (убыв.)" => filteredExpenses.OrderByDescending(exp => exp.Amount),
+                    "По сумме (возр.)" => filteredExpenses.OrderBy(exp => exp.Amount),
+                    _ => filteredExpenses
+                };
+            }
+
+            ExpensesListView.ItemsSource = filteredExpenses.ToList();
+        }
+
+        private void SortExpenses(object sender, SelectionChangedEventArgs e)
+        {
+            FilterExpenses(sender, e);
+        }
     }
 
     public class Expense

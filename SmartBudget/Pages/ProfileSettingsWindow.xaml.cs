@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SmartBudget.Models;
+using SmartBudget.Pages;
 
 namespace SmartBudget.Pages
 {
@@ -20,20 +22,22 @@ namespace SmartBudget.Pages
     public partial class ProfileSettingsWindow : Window
     {
         private string currentUsername;
-        public ProfileSettingsWindow(string username)
+        private int userID;
+        public ProfileSettingsWindow(string username, int userId)
         {
             InitializeComponent();
             currentUsername = username;
+            this.userID = userId;
             UsernameLabel.Text = $"Текущий пользователь: {currentUsername}";
         }
 
         private void EditProfile_Click(object sender, RoutedEventArgs e)
         {
-            var editprofilewindow = new EditProfileWindow();
+            var editprofilewindow = new EditProfileWindow(userID);
             var mainwindow = new MainWindow();
             editprofilewindow.Show();
             CloseMainWindow();
-            this.Close();
+            CloseProffileWindow();
         }
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -41,7 +45,7 @@ namespace SmartBudget.Pages
             var mainwindow = new MainWindow();
             settingswindow.Show();
             CloseMainWindow();
-            this.Close();
+            CloseProffileWindow();
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
@@ -50,7 +54,7 @@ namespace SmartBudget.Pages
             var mainwindow = new MainWindow();
             startwindow.Show();
             CloseMainWindow();
-            this.Close();
+            CloseProffileWindow();
         }
 
         private void CloseMainWindow()
@@ -58,6 +62,17 @@ namespace SmartBudget.Pages
             foreach (Window window in Application.Current.Windows)
             {
                 if (window is MainWindow)
+                {
+                    window.Close();
+                    break;
+                }
+            }
+        }
+        private void CloseProffileWindow()
+        {
+            foreach(Window window in Application.Current.Windows)
+            {
+                if(window is ProfileSettingsWindow)
                 {
                     window.Close();
                     break;
