@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace SmartBudget.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для SettingsWindow.xaml
+    /// Логика взаимодействия для ModelWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class ModelWindow : Window
     {
-        public SettingsWindow()
+        public ModelWindow()
         {
             InitializeComponent();
             CloseMainWindow();
@@ -48,7 +48,7 @@ namespace SmartBudget.Pages
             }
         }
 
-        private void Back_Button_Click(object sender, RoutedEventArgs e)
+        private void Back_Buton_Click(object sender, RoutedEventArgs e)
         {
             var mainwindow = new MainWindow();
             mainwindow.Show();
