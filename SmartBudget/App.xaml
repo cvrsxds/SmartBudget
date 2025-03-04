@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:SmartBudget"
              StartupUri="StartWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#2196F3</Color>
+            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+        </ResourceDictionary>
     </Application.Resources>
+
 </Application>
