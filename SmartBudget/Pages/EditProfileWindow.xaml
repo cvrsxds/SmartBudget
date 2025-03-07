@@ -18,10 +18,10 @@
         <TextBlock Text="Текущий пароль:" Grid.Row="0"/>
         <PasswordBox x:Name="CurrentPasswordBox" Grid.Row="1"/>
 
-        <TextBlock Text="Новый логин:" Grid.Row="2"/>
+        <TextBlock Text="Новый логин (если необходимо):" Grid.Row="2"/>
         <TextBox x:Name="NewUsernameTextBox" Grid.Row="3"/>
 
-        <TextBlock Text="Новый пароль:" Grid.Row="4"/>
+        <TextBlock Text="Новый пароль (если необходимо):" Grid.Row="4"/>
         <PasswordBox x:Name="NewPasswordBox" Grid.Row="5"/>
 
         <Button Content="Сохранить изменения" Grid.Row="6" Margin="190,10,0,0" Click="SaveChanges_Click"/>
