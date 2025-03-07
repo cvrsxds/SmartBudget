@@ -1,37 +1,24 @@
 ﻿using Microsoft.Data.Sqlite;
+using SmartBudget.Tables;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SmartBudget.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для SettingsWindow.xaml
-    /// </summary>
     public partial class SettingsWindow : Window
     {
         public SettingsWindow()
         {
             InitializeComponent();
             CloseMainWindow();
-            CloseProffileWindow();
+            CloseProfileWindow();
             LoadSettings();
         }
 
         private void LoadSettings()
         {
-            string currency = ConfigurationManager.AppSettings["Currency"] ?? "BYN";
+            string currency = Database.GetSetting("Currency", "BYN");
             foreach (ComboBoxItem item in CurrencyComboBox.Items)
             {
                 if (item.Content.ToString() == currency)
@@ -41,9 +28,11 @@ namespace SmartBudget.Pages
                 }
             }
 
-            string theme = ConfigurationManager.AppSettings["Theme"] ?? "Light";
+            string theme = Database.GetSetting("Theme", "Light");
             if (theme == "Dark") DarkThemeRadio.IsChecked = true;
             else LightThemeRadio.IsChecked = true;
+
+            ApplyTheme(theme);
         }
 
         private void SaveSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -51,8 +40,8 @@ namespace SmartBudget.Pages
             string selectedCurrency = (CurrencyComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "BYN";
             string selectedTheme = LightThemeRadio.IsChecked == true ? "Light" : "Dark";
 
-            SaveSetting("Currency", selectedCurrency);
-            SaveSetting("Theme", selectedTheme);
+            Database.SaveSetting("Currency", selectedCurrency);
+            Database.SaveSetting("Theme", selectedTheme);
             ApplyTheme(selectedTheme);
 
             MessageBox.Show("Настройки сохранены!", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -61,15 +50,6 @@ namespace SmartBudget.Pages
         private void ApplyTheme(string theme)
         {
             this.Background = theme == "Dark" ? System.Windows.Media.Brushes.DarkGray : System.Windows.Media.Brushes.White;
-        }
-
-        private void SaveSetting(string key, string value)
-        {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings.Remove(key);
-            config.AppSettings.Settings.Add(key, value);
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
         }
 
         private void ClearDatabaseButton_Click(object sender, RoutedEventArgs e)
@@ -99,7 +79,7 @@ namespace SmartBudget.Pages
             }
         }
 
-        private void CloseProffileWindow()
+        private void CloseProfileWindow()
         {
             foreach (Window window in Application.Current.Windows)
             {
@@ -113,8 +93,8 @@ namespace SmartBudget.Pages
 
         private void Back_Button_Click(object sender, RoutedEventArgs e)
         {
-            var mainwindow = new MainWindow();
-            mainwindow.Show();
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
             this.Close();
         }
     }
