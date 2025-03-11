@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using SmartBudget.Models;
-using SmartBudget.Pages;
+﻿using System.Windows;
 
 namespace SmartBudget.Pages
 {
@@ -29,6 +15,7 @@ namespace SmartBudget.Pages
             currentUsername = username;
             this.userID = userId;
             UsernameLabel.Text = $"Текущий пользователь: {currentUsername}";
+            this.Deactivated += (s, e) => this.Close();
         }
 
         private void EditProfile_Click(object sender, RoutedEventArgs e)
@@ -78,11 +65,6 @@ namespace SmartBudget.Pages
                     break;
                 }
             }
-        }
-
-        private void Venom_Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
-using SmartBudget.Models;
 using SmartBudget.Tables;
-using System;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 
