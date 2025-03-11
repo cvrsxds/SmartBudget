@@ -32,8 +32,11 @@ namespace SmartBudget.Tables
 
                 string createSettingsTable = @"
                     CREATE TABLE IF NOT EXISTS Settings (
-                        Key TEXT PRIMARY KEY,
-                        Value TEXT NOT NULL
+                        UserId INTEGER NOT NULL,
+                        Key TEXT NOT NULL,
+                        Value TEXT NOT NULL,
+                        PRIMARY KEY (UserId, Key),
+                        FOREIGN KEY (UserId) REFERENCES Users(Id)
                     );";
 
                 using (var command = new SqliteCommand(createUserTable, connection))
@@ -53,34 +56,57 @@ namespace SmartBudget.Tables
             }
         }
 
-        public static string GetSetting(string key, string defaultValue)
+        public static (string currency, string theme) GetSettings(int userId)
         {
             string dbPath = "SmartBudget.db";
+            string currency = "BYN";
+            string theme = "Light";
+
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             {
                 connection.Open();
-                string query = "SELECT Value FROM Settings WHERE Key = @key;";
-                using (var command = new SqliteCommand(query, connection))
+
+                string currencyQuery = "SELECT Value FROM Settings WHERE UserId = @userId AND Key = 'Currency';";
+                using (var command = new SqliteCommand(currencyQuery, connection))
                 {
-                    command.Parameters.AddWithValue("@key", key);
+                    command.Parameters.AddWithValue("@userId", userId);
                     var result = command.ExecuteScalar();
-                    return result != null ? result.ToString() : defaultValue;
+                    if (result != null)
+                    {
+                        currency = result.ToString();
+                    }
+                }
+
+                string themeQuery = "SELECT Value FROM Settings WHERE UserId = @userId AND Key = 'Theme';";
+                using (var command = new SqliteCommand(themeQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        theme = result.ToString();
+                    }
                 }
             }
+
+            return (currency, theme);
         }
 
-        public static void SaveSetting(string key, string value)
+
+        public static void SaveSettings(int userId, string key, string value)
         {
             string dbPath = "SmartBudget.db";
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             {
                 connection.Open();
                 string query = @"
-                    INSERT INTO Settings (Key, Value) VALUES (@key, @value)
-                    ON CONFLICT(Key) DO UPDATE SET Value = excluded.Value;";
+                INSERT INTO Settings (UserId, Key, Value) 
+                VALUES (@userId, @key, @value)
+                ON CONFLICT(UserId, Key) DO UPDATE SET Value = excluded.Value;";
 
                 using (var command = new SqliteCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@userId", userId);
                     command.Parameters.AddWithValue("@key", key);
                     command.Parameters.AddWithValue("@value", value);
                     command.ExecuteNonQuery();

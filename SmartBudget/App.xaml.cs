@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using SmartBudget.Pages;
 using SmartBudget.Tables;
 
 namespace SmartBudget

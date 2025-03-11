@@ -57,7 +57,7 @@ namespace SmartBudget.Pages
         {
             _expenses.Clear();
             int userId = GetCurrentUserId();
-
+            string selectedCurrency;
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             {
                 connection.Open();
@@ -79,10 +79,27 @@ namespace SmartBudget.Pages
                         }
                     }
                 }
+
+                string currencyQuery = "SELECT Value FROM Settings WHERE UserId = @UserId";
+                using (var command = new SqliteCommand(currencyQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            selectedCurrency = reader.GetString(0);
+                        }
+                        else
+                        {
+                            selectedCurrency = "BYN";
+                        }
+                    }
+                }
             }
 
             ExpensesListView.ItemsSource = _expenses;
-            TotalExpensesTextBlock.Text = $"Общая сумма: {_expenses.Sum(e => e.Amount)}";
+            TotalExpensesTextBlock.Text = $"Общая сумма: {_expenses.Sum(e => e.Amount)} {selectedCurrency}";
         }
 
         private int GetCurrentUserId()

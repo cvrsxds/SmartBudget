@@ -41,7 +41,7 @@ namespace SmartBudget.Pages
         }
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var settingswindow = new SettingsWindow();
+            var settingswindow = new SettingsWindow(userID);
             var mainwindow = new MainWindow();
             CloseMainWindow();
             CloseProffileWindow();

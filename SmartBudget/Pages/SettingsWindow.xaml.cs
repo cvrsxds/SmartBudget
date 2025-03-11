@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
+using SmartBudget.Models;
 using SmartBudget.Tables;
 using System;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,30 +10,39 @@ namespace SmartBudget.Pages
 {
     public partial class SettingsWindow : Window
     {
-        public SettingsWindow()
+        private int userID;
+        public SettingsWindow(int userId)
         {
             InitializeComponent();
             CloseMainWindow();
             CloseProfileWindow();
             LoadSettings();
+            this.userID = userId;
         }
 
         private void LoadSettings()
         {
-            string currency = Database.GetSetting("Currency", "BYN");
-            foreach (ComboBoxItem item in CurrencyComboBox.Items)
+            var (currency, theme) = Database.GetSettings(userID);
+            if (!string.IsNullOrEmpty(currency))
             {
-                if (item.Content.ToString() == currency)
+                foreach (var item in CurrencyComboBox.Items)
                 {
-                    CurrencyComboBox.SelectedItem = item;
-                    break;
+                    if (item is ComboBoxItem comboItem && comboItem.Content.ToString() == currency)
+                    {
+                        CurrencyComboBox.SelectedItem = comboItem;
+                        break;
+                    }
+                    else if (item.ToString() == currency)
+                    {
+                        CurrencyComboBox.SelectedItem = item;
+                        break;
+                    }
                 }
             }
 
-            string theme = Database.GetSetting("Theme", "Light");
-            if (theme == "Dark") DarkThemeRadio.IsChecked = true;
-            else LightThemeRadio.IsChecked = true;
-
+            bool isDarkTheme = theme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
+            DarkThemeRadio.IsChecked = isDarkTheme;
+            LightThemeRadio.IsChecked = !isDarkTheme;
             ApplyTheme(theme);
         }
 
@@ -39,17 +50,27 @@ namespace SmartBudget.Pages
         {
             string selectedCurrency = (CurrencyComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "BYN";
             string selectedTheme = LightThemeRadio.IsChecked == true ? "Light" : "Dark";
-
-            Database.SaveSetting("Currency", selectedCurrency);
-            Database.SaveSetting("Theme", selectedTheme);
+            Database.SaveSettings(userID, "Currency", selectedCurrency);
+            Database.SaveSettings(userID, "Theme", selectedTheme);
             ApplyTheme(selectedTheme);
-
             MessageBox.Show("Настройки сохранены!", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
+            Back_Button_Click(sender, e);
         }
 
         private void ApplyTheme(string theme)
         {
-            this.Background = theme == "Dark" ? System.Windows.Media.Brushes.DarkGray : System.Windows.Media.Brushes.White;
+            Uri uri;
+            if (theme == "Light")
+            {
+                uri = new Uri(@"Resources/LightTheme.xaml", UriKind.Relative);
+            }
+            else
+            {
+                uri = new Uri(@"Resources/DarkTheme.xaml", UriKind.Relative);
+            }
+            ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
+            Application.Current.Resources.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
         }
 
         private void ClearDatabaseButton_Click(object sender, RoutedEventArgs e)
