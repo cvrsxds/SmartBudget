@@ -1,7 +1,6 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.Data.Sqlite;
+using SmartBudget.Tables;
 
 namespace SmartBudget.Pages
 {
@@ -14,8 +13,8 @@ namespace SmartBudget.Pages
         {
             InitializeComponent();
             userId = currentUserId;
-            CloseMainWindow();
-            CloseProffileWindow();
+            CloseWindow.CloseMainWindow();
+            CloseWindow.CloseProfileWindow();
         }
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
@@ -41,7 +40,7 @@ namespace SmartBudget.Pages
                     var result = command.ExecuteScalar();
                     string storedPasswordHash = result as string ?? "";
 
-                    string enteredPasswordHash = HashPassword(currentPassword);
+                    string enteredPasswordHash = Hash.HashPassword(currentPassword);
 
                     if (storedPasswordHash != enteredPasswordHash)
                     {
@@ -61,7 +60,7 @@ namespace SmartBudget.Pages
                 if (!string.IsNullOrWhiteSpace(newPassword))
                 {
                     updateParts.Add("Password = @NewPassword");
-                    parameters["@NewPassword"] = HashPassword(newPassword);
+                    parameters["@NewPassword"] = Hash.HashPassword(newPassword);
                 }
 
                 if (updateParts.Count == 0)
@@ -89,46 +88,12 @@ namespace SmartBudget.Pages
             this.Close();
         }
 
-        private static string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
+
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             var mainwindow = new MainWindow();
             mainwindow.Show();
             this.Close();
-        }
-        private void CloseMainWindow()
-        {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window is MainWindow)
-                {
-                    window.Close();
-                    break;
-                }
-            }
-        }
-        private void CloseProffileWindow()
-        {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window is ProfileSettingsWindow)
-                {
-                    window.Close();
-                    break;
-                }
-            }
         }
     }
 }

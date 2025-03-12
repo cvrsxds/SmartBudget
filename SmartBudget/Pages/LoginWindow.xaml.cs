@@ -1,8 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Security.Cryptography;
+using SmartBudget.Tables;
 
 namespace SmartBudget.Pages
 {
@@ -62,7 +61,7 @@ namespace SmartBudget.Pages
                     command.Parameters.AddWithValue("@Username", username);
                     var storedHash = command.ExecuteScalar()?.ToString();
 
-                    if (storedHash != null && storedHash == HashPassword(password))
+                    if (storedHash != null && storedHash == Hash.HashPassword(password))
                     {
                         CurrentUser = username;
                         return true;
@@ -72,21 +71,6 @@ namespace SmartBudget.Pages
             }
         }
 
-        private static string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-
-        // Обработка нажатия на кнопку "Назад"
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             var startupWindow = new StartWindow();

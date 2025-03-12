@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Security.Cryptography;
 using Microsoft.Data.Sqlite;
+using SmartBudget.Tables;
 
 namespace SmartBudget.Pages
 {
@@ -71,7 +71,7 @@ namespace SmartBudget.Pages
                     return false;
                 }
 
-                string hashedPassword = HashPassword(password);
+                string hashedPassword = Hash.HashPassword(password);
                 var insertCommand = new SqliteCommand("INSERT INTO Users (Username, Password) VALUES (@username, @password)", connection);
                 insertCommand.Parameters.AddWithValue("@username", username);
                 insertCommand.Parameters.AddWithValue("@password", hashedPassword);
@@ -80,20 +80,6 @@ namespace SmartBudget.Pages
             }
 
             return true;
-        }
-
-        private static string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

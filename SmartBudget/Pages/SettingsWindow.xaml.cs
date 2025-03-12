@@ -11,8 +11,8 @@ namespace SmartBudget.Pages
         public SettingsWindow(int userId)
         {
             InitializeComponent();
-            CloseMainWindow();
-            CloseProfileWindow();
+            CloseWindow.CloseMainWindow();
+            CloseWindow.CloseProfileWindow();
             LoadSettings();
             this.userID = userId;
         }
@@ -83,30 +83,6 @@ namespace SmartBudget.Pages
                 }
             }
             MessageBox.Show("База данных очищена!", "Готово", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void CloseMainWindow()
-        {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window is MainWindow)
-                {
-                    window.Close();
-                    break;
-                }
-            }
-        }
-
-        private void CloseProfileWindow()
-        {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window is ProfileSettingsWindow)
-                {
-                    window.Close();
-                    break;
-                }
-            }
         }
 
         private void Back_Button_Click(object sender, RoutedEventArgs e)

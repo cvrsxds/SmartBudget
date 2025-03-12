@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using SmartBudget.Tables;
 
 namespace SmartBudget.Pages
 {
@@ -22,16 +23,16 @@ namespace SmartBudget.Pages
             var editprofilewindow = new EditProfileWindow(userID);
             var mainwindow = new MainWindow();
             editprofilewindow.Show();
-            CloseMainWindow();
-            CloseProffileWindow();
+            CloseWindow.CloseMainWindow();
+            CloseWindow.CloseProfileWindow();
         }
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var settingswindow = new SettingsWindow(userID);
             var mainwindow = new MainWindow();
             settingswindow.Show();
-            CloseMainWindow();
-            CloseProffileWindow();
+            CloseWindow.CloseMainWindow();
+            CloseWindow.CloseProfileWindow();
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
@@ -39,31 +40,8 @@ namespace SmartBudget.Pages
             var startwindow = new StartWindow();
             var mainwindow = new MainWindow();
             startwindow.Show();
-            CloseMainWindow();
-            CloseProffileWindow();
-        }
-
-        private void CloseMainWindow()
-        {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window is MainWindow)
-                {
-                    window.Close();
-                    break;
-                }
-            }
-        }
-        private void CloseProffileWindow()
-        {
-            foreach(Window window in Application.Current.Windows)
-            {
-                if(window is ProfileSettingsWindow)
-                {
-                    window.Close();
-                    break;
-                }
-            }
+            CloseWindow.CloseMainWindow();
+            CloseWindow.CloseProfileWindow();
         }
     }
 }
