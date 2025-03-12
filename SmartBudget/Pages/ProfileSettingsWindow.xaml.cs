@@ -15,33 +15,32 @@ namespace SmartBudget.Pages
             currentUsername = username;
             this.userID = userId;
             UsernameLabel.Text = $"Текущий пользователь: {currentUsername}";
-            this.Deactivated += (s, e) => this.Close();
         }
 
         private void EditProfile_Click(object sender, RoutedEventArgs e)
         {
             var editprofilewindow = new EditProfileWindow(userID);
             var mainwindow = new MainWindow();
+            editprofilewindow.Show();
             CloseMainWindow();
             CloseProffileWindow();
-            editprofilewindow.Show();
         }
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var settingswindow = new SettingsWindow(userID);
             var mainwindow = new MainWindow();
+            settingswindow.Show();
             CloseMainWindow();
             CloseProffileWindow();
-            settingswindow.Show();
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             var startwindow = new StartWindow();
             var mainwindow = new MainWindow();
+            startwindow.Show();
             CloseMainWindow();
             CloseProffileWindow();
-            startwindow.Show();
         }
 
         private void CloseMainWindow()
