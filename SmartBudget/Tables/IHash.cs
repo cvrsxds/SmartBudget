@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 
 namespace SmartBudget.Tables
 {
-    class Hash
+    interface IHash
     {
-        public static string HashPassword(string password)
+        protected static string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
             {

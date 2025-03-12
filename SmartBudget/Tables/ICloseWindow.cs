@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace SmartBudget.Tables
 {
-    class CloseWindow
+    interface ICloseWindow
     {
-        public static void CloseMainWindow()
+        protected static void CloseMainWindow()
         {
             foreach (Window window in Application.Current.Windows)
             {
@@ -17,7 +17,7 @@ namespace SmartBudget.Tables
             }
         }
 
-        public static void CloseProfileWindow()
+        protected static void CloseProfileWindow()
         {
             foreach (Window window in Application.Current.Windows)
             {

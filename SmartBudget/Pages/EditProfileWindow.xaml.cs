@@ -4,7 +4,7 @@ using SmartBudget.Tables;
 
 namespace SmartBudget.Pages
 {
-    public partial class EditProfileWindow : Window
+    public partial class EditProfileWindow : Window, ICloseWindow, IHash
     {
         private string dbPath = "SmartBudget.db";
         private int userId;
@@ -13,8 +13,8 @@ namespace SmartBudget.Pages
         {
             InitializeComponent();
             userId = currentUserId;
-            CloseWindow.CloseMainWindow();
-            CloseWindow.CloseProfileWindow();
+            ICloseWindow.CloseMainWindow();
+            ICloseWindow.CloseProfileWindow();
         }
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
@@ -40,7 +40,7 @@ namespace SmartBudget.Pages
                     var result = command.ExecuteScalar();
                     string storedPasswordHash = result as string ?? "";
 
-                    string enteredPasswordHash = Hash.HashPassword(currentPassword);
+                    string enteredPasswordHash = IHash.HashPassword(currentPassword);
 
                     if (storedPasswordHash != enteredPasswordHash)
                     {
@@ -60,7 +60,7 @@ namespace SmartBudget.Pages
                 if (!string.IsNullOrWhiteSpace(newPassword))
                 {
                     updateParts.Add("Password = @NewPassword");
-                    parameters["@NewPassword"] = Hash.HashPassword(newPassword);
+                    parameters["@NewPassword"] = IHash.HashPassword(newPassword);
                 }
 
                 if (updateParts.Count == 0)

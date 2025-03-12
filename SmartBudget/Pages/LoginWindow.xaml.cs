@@ -8,7 +8,7 @@ namespace SmartBudget.Pages
     /// <summary>
     /// Логика взаимодействия для LoginWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class LoginWindow : Window, IHash
     {
         public static string DbPath { get; } = "SmartBudget.db";
         public static string CurrentUser { get; private set; }
@@ -61,7 +61,7 @@ namespace SmartBudget.Pages
                     command.Parameters.AddWithValue("@Username", username);
                     var storedHash = command.ExecuteScalar()?.ToString();
 
-                    if (storedHash != null && storedHash == Hash.HashPassword(password))
+                    if (storedHash != null && storedHash == IHash.HashPassword(password))
                     {
                         CurrentUser = username;
                         return true;

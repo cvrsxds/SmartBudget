@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Data.Sqlite;
 using SmartBudget.Tables;
@@ -9,7 +8,7 @@ namespace SmartBudget.Pages
     /// <summary>
     /// Логика взаимодействия для RegisterWindow.xaml
     /// </summary>
-    public partial class RegisterWindow : Window
+    public partial class RegisterWindow : Window, IHash
     {
         public RegisterWindow()
         {
@@ -71,7 +70,7 @@ namespace SmartBudget.Pages
                     return false;
                 }
 
-                string hashedPassword = Hash.HashPassword(password);
+                string hashedPassword = IHash.HashPassword(password);
                 var insertCommand = new SqliteCommand("INSERT INTO Users (Username, Password) VALUES (@username, @password)", connection);
                 insertCommand.Parameters.AddWithValue("@username", username);
                 insertCommand.Parameters.AddWithValue("@password", hashedPassword);

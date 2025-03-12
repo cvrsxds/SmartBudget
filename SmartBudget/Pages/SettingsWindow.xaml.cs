@@ -5,14 +5,14 @@ using System.Windows.Controls;
 
 namespace SmartBudget.Pages
 {
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow : Window, ICloseWindow
     {
         private int userID;
         public SettingsWindow(int userId)
         {
             InitializeComponent();
-            CloseWindow.CloseMainWindow();
-            CloseWindow.CloseProfileWindow();
+            ICloseWindow.CloseMainWindow();
+            ICloseWindow.CloseProfileWindow();
             LoadSettings();
             this.userID = userId;
         }
