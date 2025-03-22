@@ -20,36 +20,43 @@ namespace SmartBudget.Pages
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
-
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if(AgreementCheckBox.IsChecked == true) 
             {
-                MessageBox.Show("Все поля обязательны.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (password != confirmPassword)
-            {
-                MessageBox.Show("Введенные пароли не совпадают.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            try
-            {
-                if (RegisterUser(username, password))
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 {
-                    MessageBox.Show("Регистрация успешна!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                    var startupWindow = new StartWindow();
-                    startupWindow.Show();
-                    this.Close();
+                    MessageBox.Show("Все поля обязательны.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
-                else
+
+                if (password != confirmPassword)
                 {
-                    MessageBox.Show("Username уже используется. Пожалуйста выберите другой.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Введенные пароли не совпадают.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                try
+                {
+                    if (RegisterUser(username, password))
+                    {
+                        MessageBox.Show("Регистрация успешна!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        var startupWindow = new StartWindow();
+                        startupWindow.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Username уже используется. Пожалуйста выберите другой.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Ошибка: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Подтвердите согласие на обработку данных!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
         }
 
