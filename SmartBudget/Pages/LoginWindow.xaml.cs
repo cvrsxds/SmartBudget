@@ -84,5 +84,12 @@ namespace SmartBudget.Pages
             startupWindow.Show();
             this.Close();
         }
+
+        private void PasswordReset_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var resetpasswordWindow = new ResetPasswordWindow();
+            resetpasswordWindow.Show();
+            this.Close();
+        }
     }
 }

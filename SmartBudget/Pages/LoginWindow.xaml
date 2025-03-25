@@ -50,6 +50,6 @@
                 Margin="20"
                 Click="BackButton_Click"/>
         </StackPanel>
-        <TextBlock x:Name="PasswordReset" Grid.Row="4" HorizontalAlignment="Center" Text="Забыли пароль?"/>
+        <TextBlock x:Name="PasswordReset" Grid.Row="4" HorizontalAlignment="Center" Text="Забыли пароль?" Cursor="Hand" MouseDown="PasswordReset_MouseDown"/>
     </Grid>
 </Window>

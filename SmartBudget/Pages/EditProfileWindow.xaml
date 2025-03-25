@@ -24,7 +24,7 @@
         <TextBlock Text="Новый пароль (если необходимо):" Grid.Row="4"/>
         <PasswordBox x:Name="NewPasswordBox" Grid.Row="5"/>
 
-        <Button Content="Сохранить изменения" Grid.Row="6" Margin="190,10,0,0" Click="SaveChanges_Click"/>
-        <Button Content="Назад" Grid.Row="6" Margin="0,10,190,0" Click="ExitButton_Click"/>
+        <Button Content="Сохранить" Grid.Row="6" Margin="190,10,0,0" Click="SaveChanges_Click" Height="40" Width="110"/>
+        <Button Content="Назад" Grid.Row="6" Margin="0,10,190,0" Click="ExitButton_Click" Height="40" Width="110"/>
     </Grid>
 </Window>
