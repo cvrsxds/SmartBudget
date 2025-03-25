@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Data.Sqlite;
 using SmartBudget.Tables;
@@ -18,6 +19,7 @@ namespace SmartBudget.Pages
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
+            string email = MailBox.Text;
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
             if(AgreementCheckBox.IsChecked == true) 
@@ -25,6 +27,12 @@ namespace SmartBudget.Pages
                 if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 {
                     MessageBox.Show("Все поля обязательны.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (!isValidMail(email))
+                {
+                    MessageBox.Show("Почта введена не верно.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -36,7 +44,7 @@ namespace SmartBudget.Pages
 
                 try
                 {
-                    if (RegisterUser(username, password))
+                    if (RegisterUser(username, email, password))
                     {
                         MessageBox.Show("Регистрация успешна!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                         var startupWindow = new StartWindow();
@@ -45,7 +53,7 @@ namespace SmartBudget.Pages
                     }
                     else
                     {
-                        MessageBox.Show("Username уже используется. Пожалуйста выберите другой.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Логин или почта уже используется.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
@@ -60,7 +68,7 @@ namespace SmartBudget.Pages
             }
         }
 
-        private bool RegisterUser(string username, string password)
+        private bool RegisterUser(string username, string email, string password)
         {
             string dbPath = "SmartBudget.db";
 
@@ -78,13 +86,13 @@ namespace SmartBudget.Pages
                 }
 
                 string hashedPassword = IHash.HashPassword(password);
-                var insertCommand = new SqliteCommand("INSERT INTO Users (Username, Password) VALUES (@username, @password)", connection);
+                var insertCommand = new SqliteCommand("INSERT INTO Users (Username, Mail, Password) VALUES (@username, @mail, @password)", connection);
                 insertCommand.Parameters.AddWithValue("@username", username);
+                insertCommand.Parameters.AddWithValue("@mail", email);
                 insertCommand.Parameters.AddWithValue("@password", hashedPassword);
 
                 insertCommand.ExecuteNonQuery();
             }
-
             return true;
         }
 
@@ -93,6 +101,12 @@ namespace SmartBudget.Pages
             var startWindow = new StartWindow();
             startWindow.Show();
             this.Close();
+        }
+
+        private bool isValidMail(string mail)
+        {
+            string patern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(mail, patern);
         }
     }
 }

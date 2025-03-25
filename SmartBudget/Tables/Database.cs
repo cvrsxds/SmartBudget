@@ -17,6 +17,7 @@ namespace SmartBudget.Tables
                     CREATE TABLE IF NOT EXISTS Users (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Username TEXT NOT NULL UNIQUE,
+                        Mail TEXT NOT NULL UNIQUE,
                         Password TEXT NOT NULL
                     );";
 
