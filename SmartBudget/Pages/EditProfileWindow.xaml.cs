@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using Microsoft.Data.Sqlite;
 using SmartBudget.Tables;
 
@@ -21,6 +22,7 @@ namespace SmartBudget.Pages
         {
             string currentPassword = CurrentPasswordBox.Password.Trim();
             string newUsername = NewUsernameTextBox.Text.Trim();
+            string newEmail = NewMailBox.Text.Trim();
             string newPassword = NewPasswordBox.Password.Trim();
 
             if (string.IsNullOrWhiteSpace(currentPassword))
@@ -62,6 +64,18 @@ namespace SmartBudget.Pages
                     updateParts.Add("Password = @NewPassword");
                     parameters["@NewPassword"] = IHash.HashPassword(newPassword);
                 }
+                if (!string.IsNullOrEmpty(newEmail))
+                {
+                    if (!isValidMail(newEmail))
+                    {
+                        MessageBox.Show("Ошибка: Неверный формат почты.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        updateParts.Add("Mail = @NewEmail");
+                        parameters["@NewEmail"] = newEmail;
+                    }
+                }
 
                 if (updateParts.Count == 0)
                 {
@@ -88,12 +102,16 @@ namespace SmartBudget.Pages
             this.Close();
         }
 
-
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             var mainwindow = new MainWindow();
             mainwindow.Show();
             this.Close();
+        }
+        private bool isValidMail(string mail)
+        {
+            string patern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(mail, patern);
         }
     }
 }
