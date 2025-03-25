@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
-        Title="Редактирование профиля" Height="229" Width="400">
+        Title="Редактирование профиля" Height="229" Width="400" WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

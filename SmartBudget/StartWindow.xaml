@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartBudget"
         mc:Ignorable="d"
-        Title="SmartBudget" Height="237" Width="400">
+        Title="SmartBudget" Height="237" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="0,0,0,9">
         <Grid.RowDefinitions>
             <RowDefinition Height="28*"/>

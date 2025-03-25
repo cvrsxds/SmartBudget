@@ -97,6 +97,8 @@ namespace SmartBudget.Pages
 
             ExpensesListView.ItemsSource = _expenses;
             TotalExpensesTextBlock.Text = $"Общая сумма: {_expenses.Sum(e => e.Amount)} {selectedCurrency}";
+
+            FilterExpenses(null, null);
         }
 
         private int GetCurrentUserId()
@@ -178,18 +180,17 @@ namespace SmartBudget.Pages
         {
             if (FilterCategoryComboBox == null || SortComboBox == null || ExpensesListView == null)
                 return;
+
             string selectedCategory = (FilterCategoryComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
             string sortOption = (SortComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
             var filteredExpenses = _expenses.AsEnumerable();
 
-            // Фильтрация по категории
-            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "Все")
+            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "Без фильтра")
             {
                 filteredExpenses = filteredExpenses.Where(exp => exp.Category == selectedCategory);
             }
 
-            // Сортировка
             if (!string.IsNullOrEmpty(sortOption) && sortOption != "Без фильтра")
             {
                 filteredExpenses = sortOption switch

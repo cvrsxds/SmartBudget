@@ -47,7 +47,7 @@ namespace SmartBudget.Pages
             }
         }
 
-        private bool AuthenticateUser(string username, string password)
+        private bool AuthenticateUser(string input, string password)
         {
             string connectionString = $"Data Source={DbPath}";
 
@@ -55,20 +55,27 @@ namespace SmartBudget.Pages
             {
                 connection.Open();
 
-                string query = "SELECT Password FROM Users WHERE Username = @Username";
+                string query = "SELECT Username, Password FROM Users WHERE Username = @Input OR Mail = @Input";
                 using (var command = new SqliteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Username", username);
-                    var storedHash = command.ExecuteScalar()?.ToString();
-
-                    if (storedHash != null && storedHash == IHash.HashPassword(password))
+                    command.Parameters.AddWithValue("@Input", input);
+                    using (var reader = command.ExecuteReader())
                     {
-                        CurrentUser = username;
-                        return true;
+                        if (reader.Read())
+                        {
+                            string storedUsername = reader.GetString(0);
+                            string storedHash = reader.GetString(1);
+
+                            if (storedHash == IHash.HashPassword(password))
+                            {
+                                CurrentUser = storedUsername;
+                                return true;
+                            }
+                        }
                     }
-                    return false;
                 }
             }
+            return false;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

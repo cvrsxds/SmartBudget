@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartBudget.Pages"
         mc:Ignorable="d"
-        Title="Вход в аккаунт" Height="316" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Вход в аккаунт" Height="349" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -22,7 +23,7 @@
 
         <!-- Поле для ввода логина -->
         <StackPanel Grid.Row="1" Margin="0,0,0,10">
-            <TextBlock Text="Логин:" Margin="0,0,0,5"/>
+            <TextBlock Text="Логин или почта:" Margin="0,0,0,5"/>
             <TextBox x:Name="UsernameTextBox" Height="30" Padding="5"/>
         </StackPanel>
 
@@ -49,5 +50,6 @@
                 Margin="20"
                 Click="BackButton_Click"/>
         </StackPanel>
+        <TextBlock x:Name="PasswordReset" Grid.Row="4" HorizontalAlignment="Center" Text="Забыли пароль?"/>
     </Grid>
 </Window>
