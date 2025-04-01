@@ -23,6 +23,7 @@ namespace SmartBudget.Pages
             var editprofilewindow = new EditProfileWindow(userID);
             var mainwindow = new MainWindow();
             editprofilewindow.Show();
+            mainwindow.Close();
             ICloseWindow.CloseMainWindow();
             ICloseWindow.CloseProfileWindow();
         }
@@ -31,6 +32,7 @@ namespace SmartBudget.Pages
             var settingswindow = new SettingsWindow(userID);
             var mainwindow = new MainWindow();
             settingswindow.Show();
+            mainwindow.Close();
             ICloseWindow.CloseMainWindow();
             ICloseWindow.CloseProfileWindow();
         }
@@ -40,6 +42,7 @@ namespace SmartBudget.Pages
             var startwindow = new StartWindow();
             var mainwindow = new MainWindow();
             startwindow.Show();
+            mainwindow.Close();
             ICloseWindow.CloseMainWindow();
             ICloseWindow.CloseProfileWindow();
         }
